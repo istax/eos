@@ -1,0 +1,32 @@
+
+Summary of what was wrong in **eos** and what was changed:
+
+---
+
+### 1. **Session duration ignored**
+- The menu has a “Session Duration” select (5 / 10 / 15 / 20 min), but **Start** only called `POST /api/start` with no parameters.
+- The API uses `duration` (default 10), so the chosen duration was never sent.
+- **Fix:** `app.js` now reads `#sessionDuration` and calls `/api/start?duration=<value>` when starting.
+
+### 2. **Invalid audio markup**
+- A single `<audio id="inhaleAudio">` had three `<source>` tags (inhale, exhale, gong). The browser only uses the first supported source, so exhale and gong were never used.
+- **Fix:** Replaced with three separate `<audio>` elements: `inhaleAudio`, `exhaleAudio`, `gongAudio`, each with one source.
+
+### 3. **Fragile static/template paths**
+- `StaticFiles(directory="app/static")` and `Jinja2Templates(directory="app/templates")` relied on the process CWD. Running the app from another directory could break static and template loading.
+- **Fix:** In `main.py`, paths are now derived from `Path(__file__).resolve().parent` so they work regardless of CWD.
+
+### 4. **Menu controls not wired**
+- Theme select, volume slider, and fullscreen button in the menu had no event listeners in the script that’s actually loaded (`app.js`).
+- **Fix:** In `app.js` we now:
+  - Update `document.body.className` when the theme select changes.
+  - Apply volume to the three audio elements when the volume slider changes.
+  - Toggle fullscreen when the fullscreen button is clicked.
+
+---
+
+**Other checks**
+- **Backend:** Imports and session/phase logic run correctly; `Phase` is a `str` Enum so JSON from `/api/state` is fine.
+- **Linting:** No linter issues reported on the changed files.
+
+**Note:** The app still doesn’t **play** inhale/exhale/gong from JS based on phase; the audio elements are now correctly defined and volume-controlled, so you can add `play()` calls in the state polling when `state.phase` changes. If you want, I can add that playback logic next.
