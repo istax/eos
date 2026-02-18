@@ -56,7 +56,20 @@ if (!startBtn || !stopBtn || !instruction) {
   console.log("Some elements missing");
 } else {
 
-  let prepIntervalId = null;
+  // --- Session state ---
+  const session = {
+    active: false,
+    phase: "ready",
+    pattern: { inhale: 5, hold_in: 1, exhale: 5, hold_out: 1 },
+    durationMinutes: 0,
+    startTime: null,
+    phaseTimerId: null,
+    tickTimerId: null,
+    cyclesCompleted: 0,
+    endedBy: null,
+  };
+
+  // --- Wake lock ---
   let wakeLock = null;
 
   async function acquireWakeLock() {
@@ -78,10 +91,13 @@ if (!startBtn || !stopBtn || !instruction) {
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && (prepIntervalId || stopBtn.disabled === false)) {
+    if (document.visibilityState === "visible" && session.active) {
       acquireWakeLock();
     }
   });
+
+  // --- Prep countdown ---
+  let prepIntervalId = null;
 
   function cancelPrep() {
     if (prepIntervalId) {
@@ -101,6 +117,7 @@ if (!startBtn || !stopBtn || !instruction) {
     releaseWakeLock();
   }
 
+  // --- Pattern reading ---
   function clampVal(v) { return Math.max(0, Math.min(8, parseInt(v, 10) || 0)); }
 
   function getBreathPattern() {
@@ -112,11 +129,112 @@ if (!startBtn || !stopBtn || !instruction) {
     };
   }
 
+  // --- Phase logic ---
+  function phaseDuration(phase) {
+    switch (phase) {
+      case "inhale":   return session.pattern.inhale * 1000;
+      case "pause_in": return session.pattern.hold_in * 1000;
+      case "exhale":   return session.pattern.exhale * 1000;
+      case "pause_out":return session.pattern.hold_out * 1000;
+      default: return 0;
+    }
+  }
+
+  function nextPhase(phase) {
+    switch (phase) {
+      case "inhale":   return "pause_in";
+      case "pause_in": return "exhale";
+      case "exhale":   return "pause_out";
+      case "pause_out":return "inhale";
+      default: return "complete";
+    }
+  }
+
+  function advancePhase() {
+    if (!session.active) return;
+
+    if (session.durationMinutes > 0) {
+      const elapsed = (Date.now() - session.startTime) / 1000;
+      if (elapsed >= session.durationMinutes * 60) {
+        endSession("timer");
+        return;
+      }
+    }
+
+    if (session.phase === "pause_out") {
+      session.cyclesCompleted++;
+    }
+
+    session.phase = nextPhase(session.phase);
+
+    updateUI(session.phase);
+    playPhaseSound(session.phase);
+
+    const dur = phaseDuration(session.phase);
+    if (dur > 0) {
+      session.phaseTimerId = setTimeout(advancePhase, dur);
+    } else {
+      session.phaseTimerId = setTimeout(advancePhase, 0);
+    }
+  }
+
+  function beginBreathing() {
+    session.active = true;
+    session.phase = "inhale";
+    session.startTime = Date.now();
+    session.cyclesCompleted = 0;
+    session.endedBy = null;
+
+    activePattern = { ...session.pattern };
+
+    updateUI(session.phase);
+    playPhaseSound(session.phase);
+
+    const dur = phaseDuration(session.phase);
+    if (dur > 0) {
+      session.phaseTimerId = setTimeout(advancePhase, dur);
+    } else {
+      session.phaseTimerId = setTimeout(advancePhase, 0);
+    }
+
+    session.tickTimerId = setInterval(tick, 1000);
+  }
+
+  function endSession(reason) {
+    session.active = false;
+    session.phase = "complete";
+    session.endedBy = reason;
+
+    clearTimeout(session.phaseTimerId);
+    clearInterval(session.tickTimerId);
+    session.phaseTimerId = null;
+    session.tickTimerId = null;
+
+    stopAllAudio();
+    updateUI(session.phase);
+    releaseWakeLock();
+
+    if (reason === "timer") {
+      playGong();
+      showSummary();
+    } else {
+      if (statusEl) statusEl.textContent = "";
+    }
+
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+
+  // --- Start / Stop ---
   async function startSession() {
     if (prepIntervalId) return;
+
     const durationSelect = document.getElementById("sessionDuration");
-    const duration = durationSelect ? parseInt(durationSelect.value, 10) || 10 : 10;
+    const durationMinutes = durationSelect ? parseInt(durationSelect.value, 10) || 0 : 10;
     const pattern = getBreathPattern();
+
+    session.pattern = pattern;
+    session.durationMinutes = durationMinutes;
 
     acquireWakeLock();
 
@@ -148,27 +266,22 @@ if (!startBtn || !stopBtn || !instruction) {
           prepEl.classList.remove("prep-visible");
           prepEl.textContent = "";
         }
-        activePattern = pattern;
-        fetch(`/api/start?duration=${duration}&inhale=${pattern.inhale}&hold_in=${pattern.hold_in}&exhale=${pattern.exhale}&hold_out=${pattern.hold_out}`, { method: "POST" });
+        beginBreathing();
       }
     }, 1000);
   }
 
-  async function stopSession() {
+  function stopSession() {
     if (prepIntervalId) {
       cancelPrep();
       return;
     }
-    await fetch("/api/stop", { method: "POST" });
-    stopAllAudio();
-    releaseWakeLock();
+    if (session.active) {
+      endSession("user");
+    }
   }
 
-  async function getState() {
-    const response = await fetch("/api/state");
-    return await response.json();
-  }
-
+  // --- UI ---
   const circleEl = document.getElementById("circle");
   const statusEl = document.getElementById("status");
   let activePattern = { inhale: 5, hold_in: 1, exhale: 5, hold_out: 1 };
@@ -203,6 +316,18 @@ if (!startBtn || !stopBtn || !instruction) {
     return m + ":" + String(s).padStart(2, "0");
   }
 
+  function tick() {
+    if (!session.active || !statusEl) return;
+    const elapsed = Math.floor((Date.now() - session.startTime) / 1000);
+    if (session.durationMinutes > 0) {
+      const remaining = Math.max(0, session.durationMinutes * 60 - elapsed);
+      statusEl.textContent = formatTime(remaining);
+    } else {
+      statusEl.textContent = formatTime(elapsed);
+    }
+  }
+
+  // --- Audio ---
   function getVolume() {
     const slider = document.getElementById("volumeSlider");
     return slider ? Math.min(1, Math.max(0, parseFloat(slider.value) / 100)) : 0.8;
@@ -233,9 +358,6 @@ if (!startBtn || !stopBtn || !instruction) {
     }
   }
 
-  let previousPhase = null;
-  let wasActive = false;
-
   function playGong() {
     const gongEl = document.getElementById("gongAudio");
     if (gongEl) {
@@ -245,6 +367,28 @@ if (!startBtn || !stopBtn || !instruction) {
     }
   }
 
+  // --- Summary ---
+  let summaryShown = false;
+
+  function showSummary() {
+    if (summaryShown) return;
+    summaryShown = true;
+    const elapsed = session.startTime ? Math.floor((Date.now() - session.startTime) / 1000) : 0;
+    instruction.textContent = "";
+    if (circleEl) {
+      circleEl.classList.remove("circle-expand", "circle-contract");
+      circleEl.style.transition = "background 1s ease, box-shadow 1s ease, transform 1s ease-in-out";
+    }
+    if (statusEl) {
+      statusEl.textContent = formatTime(elapsed);
+    }
+    setTimeout(() => {
+      if (statusEl) statusEl.textContent = "";
+      summaryShown = false;
+    }, 8000);
+  }
+
+  // --- Menu ---
   const menuBtn = document.getElementById("menu-btn");
   const menuPanel = document.getElementById("menu-panel");
   const menuBackdrop = document.getElementById("menu-backdrop");
@@ -278,6 +422,7 @@ if (!startBtn || !stopBtn || !instruction) {
     menuPanel.addEventListener("click", (e) => e.stopPropagation());
   }
 
+  // --- Event listeners ---
   startBtn.addEventListener("click", startSession);
   stopBtn.addEventListener("click", stopSession);
 
@@ -316,12 +461,13 @@ if (!startBtn || !stopBtn || !instruction) {
     volumeSlider.addEventListener("input", () => {
       const pct = volumeSlider.value;
       if (volumeValue) volumeValue.textContent = pct + "%";
-      [document.getElementById("inhaleAudio"), document.getElementById("exhaleAudio"), document.getElementById("gongAudio")].forEach(el => {
+      [inhaleAudio, exhaleAudio, document.getElementById("gongAudio")].forEach(el => {
         if (el) el.volume = pct / 100;
       });
     });
   }
 
+  // --- Presets & pattern boxes ---
   const presetBtns = document.querySelectorAll(".preset-btn");
   const boxInhale = document.getElementById("boxInhale");
   const boxHoldIn = document.getElementById("boxHoldIn");
@@ -370,70 +516,4 @@ if (!startBtn || !stopBtn || !instruction) {
     });
   });
 
-  let summaryShown = false;
-
-  function showSummary(state) {
-    if (summaryShown) return;
-    summaryShown = true;
-    const elapsed = formatTime(state.elapsed || 0);
-    const cycles = state.cycles_completed || 0;
-    instruction.textContent = "";
-    if (circleEl) {
-      circleEl.classList.remove("circle-expand", "circle-contract");
-      circleEl.style.transition = "background 1s ease, box-shadow 1s ease, transform 1s ease-in-out";
-    }
-    if (statusEl) {
-      statusEl.textContent = elapsed;
-    }
-    setTimeout(() => {
-      if (statusEl) statusEl.innerHTML = "";
-      summaryShown = false;
-    }, 8000);
-  }
-
-  function updateStatus(state) {
-    if (!statusEl) return;
-    if (!state.active) return;
-    if (state.remaining >= 0) {
-      statusEl.textContent = formatTime(state.remaining);
-    } else {
-      statusEl.textContent = formatTime(state.elapsed || 0);
-    }
-  }
-
-  setInterval(async () => {
-    try {
-      const state = await getState();
-      const phase = state.phase;
-      updateUI(phase);
-      if (phase !== previousPhase) {
-        playPhaseSound(phase);
-        previousPhase = phase;
-      }
-      if (state.active) {
-        updateStatus(state);
-      }
-      if (!state.active) {
-        previousPhase = null;
-        if (wasActive) {
-          stopAllAudio();
-          if (state.ended_by === "timer") {
-            playGong();
-            showSummary(state);
-          } else {
-            if (statusEl) statusEl.textContent = "";
-          }
-          releaseWakeLock();
-        }
-      }
-      wasActive = state.active;
-      const inPrep = !!prepIntervalId;
-      startBtn.disabled = state.active || inPrep;
-      stopBtn.disabled = !state.active && !inPrep;
-    } catch (err) {
-      console.log("API error:", err);
-    }
-  }, 1000);
-
 }
-
