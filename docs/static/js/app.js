@@ -517,3 +517,20 @@ if (!startBtn || !stopBtn || !instruction) {
   });
 
 }
+
+(function initDonate() {
+  const BTC_ADDRESS = "bc1qafp8x7ks0dq4pkpkdvk22x5756fmgj3p962s0fryvwqg9t85helq7gjgz9";
+  const btcLink = document.getElementById("btc-donate-link");
+  if (!btcLink) return;
+
+  btcLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(BTC_ADDRESS).then(() => {
+      const orig = btcLink.textContent;
+      btcLink.textContent = "Copied!";
+      setTimeout(() => { btcLink.textContent = orig; }, 2000);
+    }).catch(() => {
+      prompt("Bitcoin address:", BTC_ADDRESS);
+    });
+  });
+})();

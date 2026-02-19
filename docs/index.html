@@ -487,6 +487,40 @@
     .guide-close-row button {
       max-width: 160px;
     }
+
+    .menu-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(119, 141, 169, 0.15);
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.6;
+      opacity: 0.4;
+      transition: opacity 0.3s;
+    }
+    .menu-footer:hover {
+      opacity: 0.65;
+    }
+    .menu-footer p {
+      margin: 0 0 8px;
+    }
+    .menu-footer .donate-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 6px;
+    }
+    .menu-footer .donate-links a {
+      color: #778da9;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s;
+    }
+    .menu-footer .donate-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body class="night">
@@ -597,6 +631,15 @@
 
     <button id="fullscreenBtn">Toggle Full Screen (F11)</button>
     <button id="menu-guide-btn" type="button">Mindfulness Guide</button>
+
+    <div class="menu-footer">
+      <p>Eos is completely free, open&#8209;source,<br>and uses no cookies or tracking.</p>
+      <p>If you find it helpful:</p>
+      <div class="donate-links">
+        <a href="https://www.paypal.com/donate/?hosted_button_id=KP7RASPB87MWS" target="_blank" rel="noopener">PayPal</a>
+        <a href="#" id="btc-donate-link" title="Bitcoin address">Bitcoin</a>
+      </div>
+    </div>
   </div>
 
   <div id="container">
