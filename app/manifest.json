@@ -1,0 +1,30 @@
+{
+  "name": "Eos Breathing Room",
+  "short_name": "Eos",
+  "description": "A guided breathing and mindfulness companion",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1b2a",
+  "theme_color": "#0d1b2a",
+  "icons": [
+    {
+      "src": "static/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
