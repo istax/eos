@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eos-app.net/sitemap.xml

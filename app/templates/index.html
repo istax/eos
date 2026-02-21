@@ -6,11 +6,58 @@
   <meta name="theme-color" content="#0d1b2a"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="description" content="A guided breathing and mindfulness companion"/>
+  <meta name="description" content="Eos — a free guided breathing and mindfulness app. No ads, no tracking, no cookies. Works offline. Breathe, relax, and find your calm."/>
+  <meta name="keywords" content="breathing app, mindfulness, meditation, breathing exercises, guided breathing, relaxation, stress relief, free, offline, PWA"/>
+  <meta name="author" content="istax"/>
+  <link rel="canonical" href="https://eos-app.net/"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" type="image/png" sizes="192x192" href="/static/images/icon-192.png"/>
   <link rel="apple-touch-icon" href="/static/images/icon-512.png"/>
+
+  <!-- Open Graph (Facebook, WhatsApp, Telegram, LinkedIn) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://eos-app.net/"/>
+  <meta property="og:title" content="Eos Breathing Room"/>
+  <meta property="og:description" content="A free guided breathing and mindfulness app. No ads, no tracking, works offline. Breathe, relax, find your calm."/>
+  <meta property="og:image" content="https://eos-app.net/static/images/icon-512.png"/>
+  <meta property="og:image:width" content="512"/>
+  <meta property="og:image:height" content="512"/>
+  <meta property="og:site_name" content="Eos"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="Eos Breathing Room"/>
+  <meta name="twitter:description" content="Free guided breathing &amp; mindfulness app. No ads, no tracking, works offline."/>
+  <meta name="twitter:image" content="https://eos-app.net/static/images/icon-512.png"/>
+
   <title>Eos Breathing Room</title>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Eos Breathing Room",
+    "url": "https://eos-app.net/",
+    "description": "A free guided breathing and mindfulness app. No ads, no tracking, no cookies. Works offline as a PWA.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "istax"
+    },
+    "image": "https://eos-app.net/static/images/icon-512.png",
+    "browserRequirements": "Requires a modern web browser",
+    "softwareVersion": "1.0",
+    "inLanguage": "en"
+  }
+  </script>
   <style>
     body {
       margin: 0;
