@@ -296,16 +296,21 @@ if (!startBtn || !stopBtn || !instruction) {
     instruction.textContent = displayPhase(phase);
     if (circleEl) {
       circleEl.classList.remove("circle-expand", "circle-contract");
-      if (phase === "inhale" || phase === "pause_in") {
-        const dur = activePattern.inhale + activePattern.hold_in;
-        circleEl.style.transition = `background 1s ease, box-shadow 1s ease, transform ${dur}s ease-in-out`;
+      const baseTransition = "background 1s ease, box-shadow 1s ease";
+      if (phase === "inhale") {
+        circleEl.style.transition = `${baseTransition}, transform ${activePattern.inhale}s ease-in-out`;
         circleEl.classList.add("circle-expand");
-      } else if (phase === "exhale" || phase === "pause_out") {
-        const dur = activePattern.exhale + activePattern.hold_out;
-        circleEl.style.transition = `background 1s ease, box-shadow 1s ease, transform ${dur}s ease-in-out`;
+      } else if (phase === "pause_in") {
+        circleEl.style.transition = `${baseTransition}, transform 0s ease-in-out`;
+        circleEl.classList.add("circle-expand");
+      } else if (phase === "exhale") {
+        circleEl.style.transition = `${baseTransition}, transform ${activePattern.exhale}s ease-in-out`;
+        circleEl.classList.add("circle-contract");
+      } else if (phase === "pause_out") {
+        circleEl.style.transition = `${baseTransition}, transform 0s ease-in-out`;
         circleEl.classList.add("circle-contract");
       } else {
-        circleEl.style.transition = "background 1s ease, box-shadow 1s ease, transform 1s ease-in-out";
+        circleEl.style.transition = `${baseTransition}, transform 1s ease-in-out`;
       }
     }
   }
