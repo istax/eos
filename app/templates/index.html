@@ -574,10 +574,18 @@
       border: 1px solid rgba(119, 141, 169, 0.3);
       border-radius: 6px;
       transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .menu-footer .donate-links a:hover {
       background: rgba(119, 141, 169, 0.2);
       border-color: rgba(119, 141, 169, 0.5);
+    }
+    .menu-footer .donate-links img {
+      height: 14px;
+      width: 14px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -702,8 +710,17 @@
       <p>Eos is completely free, open&#8209;source,<br>and uses no cookies or tracking.</p>
       <p>If you find it helpful:</p>
       <div class="donate-links">
-        <a href="https://www.paypal.com/donate/?hosted_button_id=KP7RASPB87MWS" target="_blank" rel="noopener">PayPal</a>
-        <a href="#" id="btc-donate-link" title="Bitcoin address">Bitcoin</a>
+        <a href="https://www.paypal.com/donate/?hosted_button_id=KP7RASPB87MWS" target="_blank" rel="noopener">
+          <span class="donate-label">PayPal</span>
+        </a>
+        <a href="#" id="btc-donate-link" title="Bitcoin address">
+          <span class="donate-label">Bitcoin</span>
+          <img src="/static/images/bitcoin.svg" alt="Bitcoin logo">
+        </a>
+        <a href="#" id="ln-donate-link" title="Lightning address">
+          <span class="donate-label">Lightning</span>
+          <img src="/static/images/lightning-lightning-svgrepo-com.svg" alt="Lightning logo">
+        </a>
       </div>
     </div>
   </div>

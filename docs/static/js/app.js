@@ -525,17 +525,31 @@ if (!startBtn || !stopBtn || !instruction) {
 
 (function initDonate() {
   const BTC_ADDRESS = "bc1qafp8x7ks0dq4pkpkdvk22x5756fmgj3p962s0fryvwqg9t85helq7gjgz9";
-  const btcLink = document.getElementById("btc-donate-link");
-  if (!btcLink) return;
+  const LN_ADDRESS = "lnbc1p5em9mzpp5n4pahn93kjm4kh9fgtxr96t87cs93cgatw4zcktfumyuc966u96qsp5s0ld2z53a37z8y3sszz9k5zp3yk6a25a88tuckm08agf4r200r6sdqdg4hhxttpwpczqcqzynxq8zals8sq9qlzqqqqqqqqqqqqqqqqqqqqqqqqqqysgqrzjqt8qz3390z9xzsgnnrure9znw4nrjun3vq57l8vfzecezswuzzdpcqkwfdx5yta9r5qqqqqqqqqqqeqqjqvaczwee0tmr56p7kvsc9ucvr5tylap9n5fek3m4zk4sse8em947nlsgww0jvvela4cvd6cl976e2gv6w6t0c8fg00ha86ql8gmyn9gspwhuu35";
 
-  btcLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigator.clipboard.writeText(BTC_ADDRESS).then(() => {
-      const orig = btcLink.textContent;
-      btcLink.textContent = "Copied!";
-      setTimeout(() => { btcLink.textContent = orig; }, 2000);
-    }).catch(() => {
-      prompt("Bitcoin address:", BTC_ADDRESS);
+  const btcLink = document.getElementById("btc-donate-link");
+  const lnLink = document.getElementById("ln-donate-link");
+  if (!btcLink && !lnLink) return;
+
+  function attachCopyHandler(linkEl, value, label) {
+    if (!linkEl) return;
+    const labelSpan = linkEl.querySelector(".donate-label");
+    const originalText = labelSpan ? labelSpan.textContent : null;
+    linkEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(value).then(() => {
+        if (labelSpan && originalText !== null) {
+          labelSpan.textContent = "Copied!";
+          setTimeout(() => { labelSpan.textContent = originalText; }, 2000);
+        } else {
+          alert(label + " copied to clipboard.");
+        }
+      }).catch(() => {
+        prompt(label + ":", value);
+      });
     });
-  });
+  }
+
+  attachCopyHandler(btcLink, BTC_ADDRESS, "Bitcoin address");
+  attachCopyHandler(lnLink, LN_ADDRESS, "Lightning address");
 })();
