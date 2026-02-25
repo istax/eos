@@ -226,11 +226,12 @@
       -webkit-backdrop-filter: blur(12px);
       border-right: 1px solid rgba(119, 141, 169, 0.25);
       padding: 80px 20px 20px;
+      padding-bottom: 24px;
       transition: left 0.4s ease;
       z-index: 90;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -261,6 +262,13 @@
       max-width: 220px;
       box-sizing: border-box;
       transition: all 0.25s;
+    }
+    #menu-panel #themeSelect,
+    #menu-panel #sessionDuration,
+    #menu-panel #fullscreenBtn,
+    #menu-panel #menu-guide-btn {
+      font-size: 13px;
+      padding: 6px 14px;
     }
     select:hover, button:hover { background: #778da9; }
     button:active { transform: scale(0.98); }
@@ -293,12 +301,22 @@
     .menu-section {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
     .menu-label {
       font-size: 13px;
       opacity: 0.75;
-      margin-bottom: 2px;
+      margin-bottom: 0;
+    }
+    .menu-label.volume-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-label.volume-label-row #volumeValue {
+      font-size: 12px;
+      opacity: 0.8;
+      margin: 0;
     }
     .control-row {
       display: flex;
@@ -548,12 +566,12 @@
     }
 
     .menu-footer {
-      margin-top: 12px;
-      padding: 16px 0 8px;
+      margin-top: 18px;
+      padding: 14px 0 4px;
       border-top: 1px solid rgba(119, 141, 169, 0.25);
       text-align: center;
       font-size: 12px;
-      line-height: 1.7;
+      line-height: 1.6;
       opacity: 0.7;
     }
     .menu-footer p {
@@ -702,9 +720,11 @@
     </div>
 
     <div class="menu-section">
-      <div class="menu-label">Master Volume</div>
+      <div class="menu-label volume-label-row">
+        <span>Master Volume</span>
+        <span id="volumeValue">80%</span>
+      </div>
       <input type="range" id="volumeSlider" min="0" max="100" value="80" step="1">
-      <div id="volumeValue" style="font-size:12px; text-align:center; opacity:0.7; margin-top:4px;">80%</div>
     </div>
 
     <button id="fullscreenBtn">Toggle Full Screen (F11)</button>
