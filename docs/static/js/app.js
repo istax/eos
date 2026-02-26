@@ -443,9 +443,29 @@ if (!startBtn || !stopBtn || !instruction) {
   });
 
   const themeSelect = document.getElementById("themeSelect");
+  const THEME_KEY = "eos-theme";
+
+  function applyTheme(theme) {
+    if (!theme) return;
+    document.body.className = theme;
+    if (themeSelect) themeSelect.value = theme;
+  }
+
+  // Load saved theme on startup
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  }
+
   if (themeSelect) {
     themeSelect.addEventListener("change", () => {
-      document.body.className = themeSelect.value;
+      const value = themeSelect.value;
+      applyTheme(value);
+      try {
+        localStorage.setItem(THEME_KEY, value);
+      } catch (_) {
+        // ignore storage errors
+      }
     });
   }
 
