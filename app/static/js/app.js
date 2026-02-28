@@ -545,7 +545,7 @@ if (!startBtn || !stopBtn || !instruction) {
 
 (function initDonate() {
   const BTC_ADDRESS = "bc1qafp8x7ks0dq4pkpkdvk22x5756fmgj3p962s0fryvwqg9t85helq7gjgz9";
-  const LN_ADDRESS = "lnbc1p5em9mzpp5n4pahn93kjm4kh9fgtxr96t87cs93cgatw4zcktfumyuc966u96qsp5s0ld2z53a37z8y3sszz9k5zp3yk6a25a88tuckm08agf4r200r6sdqdg4hhxttpwpczqcqzynxq8zals8sq9qlzqqqqqqqqqqqqqqqqqqqqqqqqqqysgqrzjqt8qz3390z9xzsgnnrure9znw4nrjun3vq57l8vfzecezswuzzdpcqkwfdx5yta9r5qqqqqqqqqqqeqqjqvaczwee0tmr56p7kvsc9ucvr5tylap9n5fek3m4zk4sse8em947nlsgww0jvvela4cvd6cl976e2gv6w6t0c8fg00ha86ql8gmyn9gspwhuu35";
+  const LN_ADDRESS = "friendlycachet457239@getalby.com";
 
   const btcLink = document.getElementById("btc-donate-link");
   const lnLink = document.getElementById("ln-donate-link");
