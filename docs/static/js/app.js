@@ -498,6 +498,7 @@ if (!startBtn || !stopBtn || !instruction) {
   const boxHoldIn = document.getElementById("boxHoldIn");
   const boxExhale = document.getElementById("boxExhale");
   const boxHoldOut = document.getElementById("boxHoldOut");
+  const PATTERN_KEY = "eos-breath-pattern";
 
   function setBoxValues(inhale, holdIn, exhale, holdOut) {
     if (boxInhale) boxInhale.value = inhale;
@@ -506,23 +507,56 @@ if (!startBtn || !stopBtn || !instruction) {
     if (boxHoldOut) boxHoldOut.value = holdOut;
   }
 
-  function updatePresetHighlight() {
-    const current = [
+  function currentPatternValues() {
+    return [
       clampVal(boxInhale?.value),
       clampVal(boxHoldIn?.value),
       clampVal(boxExhale?.value),
       clampVal(boxHoldOut?.value),
-    ].join("-");
+    ];
+  }
+
+  function persistPattern() {
+    try {
+      const [inhale, hold_in, exhale, hold_out] = currentPatternValues();
+      localStorage.setItem(PATTERN_KEY, JSON.stringify({ inhale, hold_in, exhale, hold_out }));
+    } catch (_) {
+      // ignore storage errors
+    }
+  }
+
+  function updatePresetHighlight() {
+    const current = currentPatternValues().join("-");
     presetBtns.forEach(btn => {
       btn.classList.toggle("preset-active", btn.dataset.preset === current);
     });
   }
+
+  // Load persisted pattern on startup.
+  try {
+    const savedPatternRaw = localStorage.getItem(PATTERN_KEY);
+    if (savedPatternRaw) {
+      const savedPattern = JSON.parse(savedPatternRaw);
+      if (savedPattern && typeof savedPattern === "object") {
+        setBoxValues(
+          clampVal(savedPattern.inhale),
+          clampVal(savedPattern.hold_in),
+          clampVal(savedPattern.exhale),
+          clampVal(savedPattern.hold_out),
+        );
+      }
+    }
+  } catch (_) {
+    // ignore parse/storage errors
+  }
+  updatePresetHighlight();
 
   presetBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       const parts = btn.dataset.preset.split("-").map(Number);
       setBoxValues(parts[0], parts[1], parts[2], parts[3]);
       updatePresetHighlight();
+      persistPattern();
     });
   });
 
@@ -534,10 +568,12 @@ if (!startBtn || !stopBtn || !instruction) {
       if (v < 0) box.value = 0;
       if (v > 8) box.value = 8;
       updatePresetHighlight();
+      persistPattern();
     });
     box.addEventListener("blur", () => {
       box.value = clampVal(box.value);
       updatePresetHighlight();
+      persistPattern();
     });
   });
 

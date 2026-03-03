@@ -584,6 +584,18 @@
     .menu-footer p {
       margin: 0 0 8px;
     }
+    .menu-footer .support-line {
+      margin: 0 0 10px;
+      opacity: 0.85;
+    }
+    .menu-footer .support-link {
+      color: #a8c0d8;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(168, 192, 216, 0.45);
+    }
+    .menu-footer .support-link:hover {
+      border-bottom-color: rgba(168, 192, 216, 0.9);
+    }
     .menu-footer .donate-links {
       display: flex;
       justify-content: center;
@@ -739,6 +751,7 @@
 
     <div class="menu-footer">
       <p>Eos is completely free, open&#8209;source,<br>and uses no cookies or tracking.</p>
+      <p class="support-line">Support: <a class="support-link" href="mailto:support@eos-app.net">support@eos-app.net</a></p>
       <p>If you find it helpful:</p>
       <div class="donate-links">
         <a href="https://www.paypal.com/donate/?hosted_button_id=KP7RASPB87MWS" target="_blank" rel="noopener">
