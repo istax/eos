@@ -2,7 +2,8 @@ Place your audio files here:
 
   inhale.mp3  - short cue played at start of inhale (1-2 seconds)
   exhale.mp3  - short cue played at start of exhale (1-2 seconds)
-  gong.mp3    - played at session start and when timer ends (2-3 seconds)
+  gong.mp3         - played at session start (2-3 seconds)
+  gong-reduced.mp3 - played when timer ends (2-3 seconds)
 
 Tips:
   - Keep files short so they work with all breathing patterns (4s-8s).

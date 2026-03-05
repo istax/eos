@@ -215,7 +215,7 @@ if (!startBtn || !stopBtn || !instruction) {
     releaseWakeLock();
 
     if (reason === "timer") {
-      playGong();
+      playGong("end");
       showSummary();
     } else {
       if (statusEl) statusEl.textContent = "";
@@ -238,12 +238,7 @@ if (!startBtn || !stopBtn || !instruction) {
 
     acquireWakeLock();
 
-    const gongEl = document.getElementById("gongAudio");
-    if (gongEl) {
-      gongEl.volume = getVolume();
-      gongEl.currentTime = 0;
-      gongEl.play().catch(() => {});
-    }
+    playGong("start");
 
     const prepEl = document.getElementById("prep-countdown");
     if (prepEl) {
@@ -363,8 +358,8 @@ if (!startBtn || !stopBtn || !instruction) {
     }
   }
 
-  function playGong() {
-    const gongEl = document.getElementById("gongAudio");
+  function playGong(kind = "start") {
+    const gongEl = document.getElementById(kind === "end" ? "gongEndAudio" : "gongAudio");
     if (gongEl) {
       gongEl.volume = getVolume();
       gongEl.currentTime = 0;
@@ -486,7 +481,7 @@ if (!startBtn || !stopBtn || !instruction) {
     volumeSlider.addEventListener("input", () => {
       const pct = volumeSlider.value;
       if (volumeValue) volumeValue.textContent = pct + "%";
-      [inhaleAudio, exhaleAudio, document.getElementById("gongAudio")].forEach(el => {
+      [inhaleAudio, exhaleAudio, document.getElementById("gongAudio"), document.getElementById("gongEndAudio")].forEach(el => {
         if (el) el.volume = pct / 100;
       });
     });

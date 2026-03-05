@@ -1,4 +1,4 @@
-const CACHE_NAME = "eos-v1";
+const CACHE_NAME = "eos-v3";
 const ASSETS = [
   ".",
   "index.html",
@@ -7,6 +7,7 @@ const ASSETS = [
   "static/audio/inhale.mp3",
   "static/audio/exhale.mp3",
   "static/audio/gong.mp3",
+  "static/audio/gong-reduced.mp3",
   "static/images/dawn.jpeg",
   "static/images/space.jpeg",
   "static/images/icon-192.png",
