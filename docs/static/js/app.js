@@ -464,6 +464,21 @@ if (!startBtn || !stopBtn || !instruction) {
     });
   }
 
+  const durationSelect = document.getElementById("sessionDuration");
+  const DURATION_KEY = "eos-session-duration";
+  const VALID_DURATIONS = ["0", "5", "10", "15", "20"];
+  const savedDuration = localStorage.getItem(DURATION_KEY);
+  if (durationSelect && savedDuration && VALID_DURATIONS.includes(savedDuration)) {
+    durationSelect.value = savedDuration;
+  }
+  if (durationSelect) {
+    durationSelect.addEventListener("change", () => {
+      try {
+        localStorage.setItem(DURATION_KEY, durationSelect.value);
+      } catch (_) {}
+    });
+  }
+
   const fullscreenBtn = document.getElementById("fullscreenBtn");
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
