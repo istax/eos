@@ -1,0 +1,13 @@
+[Unit]
+Description=Eos Breathing Room web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/eos
+WorkingDirectory=/usr/share/eos-breathing-room
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

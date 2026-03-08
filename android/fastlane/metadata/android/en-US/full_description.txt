@@ -1,0 +1,8 @@
+Eos is a calm breathing and mindfulness companion with:
+
+- Configurable inhale/hold/exhale/hold patterns
+- Session timer with gentle visual guidance
+- Optional audio cues and end-session gong
+- Lightweight interface designed for focus
+
+This Android package is a FLOSS wrapper build target prepared for F-Droid.

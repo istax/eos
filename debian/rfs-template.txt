@@ -1,0 +1,31 @@
+Subject: RFS: eos-breathing-room/1.0.0-1 [ITP]
+
+Package: sponsorship-requests
+Severity: wishlist
+
+Dear mentors,
+
+I am looking for a sponsor for my package "eos-breathing-room":
+
+ * Package name    : eos-breathing-room
+   Version         : 1.0.0-1
+   Upstream Author : istax <support@eos-app.net>
+ * URL             : https://eos-app.net/
+ * License         : MIT/Expat
+ * Vcs             : https://github.com/istax/eos
+ * Summary         : Guided breathing and mindfulness web app
+
+The source builds the following binary package:
+
+  eos-breathing-room - Guided breathing and mindfulness web app
+
+To access further information about this package, please visit:
+
+  https://github.com/istax/eos
+
+Changes since the last upload:
+
+  * Initial Debian package upload.
+
+Regards,
+istax

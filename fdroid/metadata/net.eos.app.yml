@@ -1,0 +1,38 @@
+Categories:
+  - Health
+License: MIT
+AuthorName: istax
+AuthorEmail: support@eos-app.net
+WebSite: https://eos-app.net/
+SourceCode: https://github.com/istax/eos
+IssueTracker: https://github.com/istax/eos/issues
+Translation: https://github.com/istax/eos
+Changelog: https://github.com/istax/eos/releases
+
+AutoName: Eos Breathing Room
+Summary: Guided breathing and mindfulness companion
+Description: |
+  Eos is a guided breathing and mindfulness companion with configurable
+  breathing patterns and gentle visual guidance.
+
+  This metadata entry supports two delivery flavors in the Android prototype:
+  wrapper-first and bundled fallback.
+
+RepoType: git
+Repo: https://github.com/istax/eos.git
+
+Builds:
+  - versionName: 1.0.0-wrapper
+    versionCode: 1
+    subdir: android
+    gradle:
+      - wrapperRelease
+
+  - versionName: 1.0.0-bundled
+    versionCode: 2
+    subdir: android
+    gradle:
+      - bundledRelease
+
+CurrentVersion: 1.0.0-bundled
+CurrentVersionCode: 2

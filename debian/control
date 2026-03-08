@@ -1,0 +1,27 @@
+Source: eos-breathing-room
+Section: web
+Priority: optional
+Maintainer: istax <support@eos-app.net>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-python,
+ python3-all
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://eos-app.net/
+Vcs-Git: https://github.com/istax/eos.git
+Vcs-Browser: https://github.com/istax/eos
+
+Package: eos-breathing-room
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-fastapi,
+ python3-uvicorn,
+ python3-jinja2,
+ python3-multipart
+Description: Guided breathing and mindfulness web app
+ Eos Breathing Room is a guided breathing and mindfulness app with a
+ configurable breathing pattern, optional audio cues, and PWA-ready static
+ assets for mobile/desktop use.

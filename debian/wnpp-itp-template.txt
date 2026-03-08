@@ -1,0 +1,19 @@
+Subject: ITP: eos-breathing-room -- Guided breathing and mindfulness web app
+
+Package: wnpp
+Severity: wishlist
+Owner: istax <support@eos-app.net>
+
+* Package name    : eos-breathing-room
+  Version         : 1.0.0
+  Upstream Author : istax <support@eos-app.net>
+* URL             : https://eos-app.net/
+* License         : MIT/Expat
+  Programming Lang: Python, JavaScript, HTML/CSS
+  Description     : Guided breathing and mindfulness web app
+
+ Eos Breathing Room is a guided breathing and mindfulness app with configurable
+ breathing patterns, optional audio cues, and static assets suitable for
+ desktop/mobile usage.
+
+I intend to package this software for Debian.

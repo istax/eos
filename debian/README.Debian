@@ -1,0 +1,16 @@
+eos-breathing-room for Debian
+=============================
+
+Run Eos manually:
+
+  eos
+
+Default bind:
+- http://127.0.0.1:8000
+
+Systemd service:
+
+  sudo systemctl enable --now eos-breathing-room.service
+
+Customize host/port by editing /usr/bin/eos or overriding ExecStart via
+systemd drop-in.
