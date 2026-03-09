@@ -1,7 +1,7 @@
 eos-breathing-room (1.0.0-1) unstable; urgency=medium
 
-  * Initial Debian packaging.
+  *   * Initial Debian packaging. (Closes: #1130103)
   * Package FastAPI-based Eos breathing app and static assets.
   * Add launcher script and systemd user service unit.
 
- -- istax <support@eos-app.net>  Sat, 08 Mar 2026 12:00:00 +0000
+ -- istax <support@eos-app.net>  Sun, 08 Mar 2026 12:00:00 +0000
